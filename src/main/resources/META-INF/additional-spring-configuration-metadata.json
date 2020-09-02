@@ -1,0 +1,81 @@
+{
+  "groups": [
+    {
+      "name": "spring.el-util.zookeeper",
+      "type": "com.el.zk.config.ZookeeperConfiguration",
+      "description": "自动装配数据源.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.el-util.zookeeper.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否开启zookeeper.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.el-util.zookeeper.serverAddr",
+      "type": "java.lang.String",
+      "description": "服务列表.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": ""
+    },
+    {
+      "name": "spring.el-util.zookeeper.namespace",
+      "type": "java.lang.String",
+      "description": "命名空间.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": ""
+    },
+    {
+      "name": "spring.el-util.zookeeper.rootPath",
+      "type": "java.lang.String",
+      "description": "项目根节点.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": ""
+    },
+    {
+      "name": "spring.el-util.zookeeper.digest",
+      "type": "java.lang.Integer",
+      "description": "acl.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": "rt:rt"
+    },
+    {
+      "name": "spring.el-util.zookeeper.sessionTimeoutMs",
+      "type": "java.lang.Long",
+      "description": "会话超时时间，单位为毫秒，默认60000ms,连接断开后，其它客户端还能请到临时节点的时间.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": 60000
+    },
+    {
+      "name": "spring.el-util.zookeeper.maxRetries",
+      "type": "java.lang.Long",
+      "description": "最大重试次数.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": 3
+    },
+    {
+      "name": "spring.el-util.zookeeper.baseSleepTimeMs",
+      "type": "java.lang.Long",
+      "description": "初始sleep时间 ,毫秒.",
+      "sourceType": "com.el.zk.config.ZookeeperConfiguration",
+      "defaultValue": 1000
+    }
+  ],
+  "hints": [{
+    "name": "spring.el-util.zookeeper.enable",
+    "values": [
+      {
+        "value": true,
+        "description": "开启."
+      },
+      {
+        "value": false,
+        "description": "关闭."
+      }
+    ]
+  }]
+}
