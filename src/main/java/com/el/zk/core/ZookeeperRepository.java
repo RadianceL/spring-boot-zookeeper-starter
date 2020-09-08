@@ -35,8 +35,8 @@ public class ZookeeperRepository {
 
     private CuratorCache curatorCache;
 
-    private void start() {
-        curatorCache = initLocalCache("rootPath", ((type, oldData, data) -> {
+    public void start() {
+        curatorCache = initLocalCache(rootPath, ((type, oldData, data) -> {
             // ignore
         }));
     }
@@ -75,7 +75,7 @@ public class ZookeeperRepository {
             //使用creatingParentContainersIfNeeded()之后Curator能够自动递归创建所有所需的父节点
             curatorFramework.create().creatingParentsIfNeeded().withMode(mode).forPath(path,nodeData.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            log.error("注册出错", e);
+            log.error("zookeeper create node exception", e);
         }
     }
 
@@ -93,7 +93,7 @@ public class ZookeeperRepository {
             //使用creatingParentContainersIfNeeded()之后Curator能够自动递归创建所有所需的父节点
             curatorFramework.create().creatingParentsIfNeeded().withMode(mode).forPath(path);
         } catch (Exception e) {
-            log.error("注册出错", e);
+            log.error("zookeeper create node exception", e);
         }
     }
 
@@ -105,8 +105,8 @@ public class ZookeeperRepository {
     public void deleteNode(final String path) {
         try {
             deleteNode(path,true);
-        } catch (Exception ex) {
-            log.error("删除节点异常", ex);
+        } catch (Exception e) {
+            log.error("zookeeper delete node exception", e);
         }
     }
 
@@ -126,7 +126,7 @@ public class ZookeeperRepository {
                 curatorFramework.delete().guaranteed().forPath(path);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("zookeeper delete node exception", e);
         }
     }
 
@@ -139,8 +139,8 @@ public class ZookeeperRepository {
     public void setNodeData(String path, byte[] datas){
         try {
             curatorFramework.setData().forPath(path, datas);
-        }catch (Exception ex) {
-            log.error("设置节点数据异常",ex);
+        }catch (Exception e) {
+            log.error("zookeeper set node exception", e);
         }
     }
 
@@ -160,8 +160,8 @@ public class ZookeeperRepository {
                 return childData.getData();
             }
             return curatorFramework.getData().forPath(path);
-        }catch (Exception ex) {
-            log.error("获取指定节点数据异常",ex);
+        }catch (Exception e) {
+            log.error("zookeeper get node exception", e);
         }
         return null;
     }
@@ -186,7 +186,8 @@ public class ZookeeperRepository {
         curatorFramework.sync();
         try {
             return null != curatorFramework.checkExists().forPath(path);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            log.error("zookeeper judge node exist exception", e);
             return false;
         }
     }
@@ -202,7 +203,7 @@ public class ZookeeperRepository {
         try {
             childrenList = curatorFramework.getChildren().forPath(path);
         } catch (Exception e) {
-            log.error("获取子节点出错", e);
+            log.error("zookeeper get child node exception", e);
         }
         return childrenList;
     }
@@ -214,17 +215,17 @@ public class ZookeeperRepository {
      * @param dealWork 获取
      * @return
      */
-    public Object getSRLock(String lockPath,long time, ShareReentryLockDealCallback<?> dealWork){
+    public <T> T getSharedReentrantLock(String lockPath,long time, ShareReentryLockDealCallback<T> dealWork){
         InterProcessMutex lock = new InterProcessMutex(curatorFramework, lockPath);
         try {
             if (!lock.acquire(time, TimeUnit.SECONDS)) {
-                log.error("get lock fail:{}", " could not acquire the lock");
+                log.error("zookeeper get shared reentrant lock exception: could not acquire the lock");
                 return null;
             }
             log.debug("{} get the lock",lockPath);
             return dealWork.deal();
         }catch(Exception e){
-            log.error("{}", e);
+            log.error("zookeeper get shared reentrant lock exception", e);
         }finally{
             try {
                 lock.release();
