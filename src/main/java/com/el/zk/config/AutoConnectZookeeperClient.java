@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class AutoConnectZookeeperClient {
 
-    @Bean(initMethod = "start")
+    @Bean
     @ConditionalOnProperty(prefix = "spring.el-util.zookeeper", name = "enable")
     public ZookeeperRepository createZookeeperRepository(ZookeeperConfiguration zookeeperConfiguration) {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(zookeeperConfiguration.getBaseSleepTimeMs(),
@@ -51,9 +51,9 @@ public class AutoConnectZookeeperClient {
 
         String rootPath = "/";
         if (StringUtils.isNotBlank(zookeeperConfiguration.getRootPath())) {
-            rootPath = zookeeperConfiguration.getRootPath();
+            rootPath = rootPath.concat(zookeeperConfiguration.getNamespace());
         }
-
+        curatorFramework.start();
         return new ZookeeperRepository(curatorFramework, rootPath);
     }
 }
