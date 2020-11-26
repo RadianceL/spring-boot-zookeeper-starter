@@ -77,8 +77,9 @@ public class ZookeeperRepository {
         getClient().getZookeeperClient().getZooKeeper().addWatch(rootPath, watchedEvent -> {
             if (Watcher.Event.EventType.NodeDataChanged.equals(watchedEvent.getType())) {
                 try {
-                    byte[] nodeData = this.getNodeData(watchedEvent.getPath().replaceFirst(rootPath, ""));
-                    notifyEventHandler.handleData(new EventData(watchedEvent.getPath(), nodeData));
+                    String dataPath = watchedEvent.getPath().replaceFirst(rootPath, "");
+                    byte[] nodeData = this.getNodeData(dataPath);
+                    notifyEventHandler.handleData(new EventData(dataPath, nodeData));
                 }catch (Throwable throwable) {
                     log.error("switch - update event error, data path: [{}]", watchedEvent.getPath());
                 }
